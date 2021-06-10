@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import csv
+import psycopg2
 import lxml
 
 title = []
@@ -30,3 +31,13 @@ with open('collected.csv', 'w') as f:
     w.writerow(title)
     w.writerow(dataHeaders)
     f.close()
+
+conn = psycopg2.connect(host="localhost", database="DataScrapingDB", user="Emerson", password="postgres")
+curr = conn.cursor()
+x = 0
+while x < len(rowInfo):
+    print(x, rowInfo[x])
+    curr.execute("insert into testerdb (id, data) values (0, '')")
+    x = x + 1
+print(curr.execute("select * from testerdb"))
+conn.close()
