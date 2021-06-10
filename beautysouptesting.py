@@ -35,9 +35,11 @@ with open('collected.csv', 'w') as f:
 conn = psycopg2.connect(host="localhost", database="DataScrapingDB", user="Emerson", password="postgres")
 curr = conn.cursor()
 x = 0
-while x < len(rowInfo):
-    print(x, rowInfo[x])
-    curr.execute("insert into testerdb (id, data) values (0, '')")
-    x = x + 1
-print(curr.execute("select * from testerdb"))
+#while x < len(rowInfo):
+ #   curr.execute("insert into testerdb (id, data) values (%s, %s)", (x, rowInfo[x]))
+  #  x = x + 1
+var = curr.execute("select * from testerdb")
+rows = curr.fetchall()
+print(rows)
+conn.commit()
 conn.close()
