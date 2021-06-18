@@ -2,7 +2,8 @@ from bs4 import BeautifulSoup
 import requests
 import csv
 import psycopg2
-import lxml
+import pandas as pd
+import plotly.express as px
 
 title = []
 rowInfo = []
@@ -45,3 +46,8 @@ rows = curr.fetchall()
 print(rows)
 conn.commit()
 conn.close()
+
+dfb = pd.read_csv("https://www.ndbc.noaa.gov/sar.php?station=44258")
+
+df = px.data.tips()
+fig = px.pie(df, values="")
