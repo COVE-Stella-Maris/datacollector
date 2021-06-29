@@ -31,7 +31,10 @@ for th in soup.find_all('th'):
 for td in soup.find_all('tr'):
     if td.get('bgcolor') == "#f0f8fe" or td.get('bgcolor') == "#fffff0":
         date.append(td.find_next().text)
-        UTC.append(td.find_next().find_next().text)
+        localTime = td.find_next().find_next().text
+        localTime = int(localTime[0:4])
+        localTime = abs((localTime - 1200) - 300)
+        UTC.append(localTime)
         avgWindDir.append(td.find_next().find_next().find_next().text)
         avgWindSpd.append(td.find_next().find_next().find_next().find_next().text)
         windObs.append(td.find_next().find_next().find_next().find_next().find_next().text)
