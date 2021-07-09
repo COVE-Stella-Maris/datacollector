@@ -2,12 +2,12 @@ from bs4 import BeautifulSoup
 import requests
 import psycopg2
 import datetime
+from pytz import timezone
 
 
 title = []
 dataHeaders = []
-date = []
-UTC = []
+localDateTime = []
 avgWindDir = []
 avgWindSpd = []
 windObs = []
@@ -16,7 +16,8 @@ waveObs = []
 
 
 # Request to Page
-page = requests.get('https://www.ndbc.noaa.gov/sar.php?station=44258&list=all')
+page = requests.get('https://www.ndbc.noaa.gov/sar.php?station=44258')
+#page = requests.get('https://www.ndbc.noaa.gov/sar.php?station=44258&list=all')
 soup = BeautifulSoup(page.text, 'lxml')
 
 # Grabbing Page Title
@@ -30,32 +31,32 @@ for th in soup.find_all('th'):
 # Grabbing Data from Table
 for td in soup.find_all('tr'):
     if td.get('bgcolor') == "#f0f8fe" or td.get('bgcolor') == "#fffff0":
-        date.append(td.find_next().text)
+        date = td.find_next().text
+        zTime = td.find_next().find_next().text
         # Local Time Conversion
-        localTime = td.find_next().find_next().text
-        localTime = int(localTime[0:4])
-        localTime = abs((localTime - 1200) - 300)
-        UTC.append(localTime)
+        zTime = abs(int(zTime[0] + zTime[1]))
+        nativeDateTime = datetime.datetime(int(date[6] + date[7] + date[8] + date[9]), int(date[0] + date[1]), int(date[3] + date[4]), zTime, 0, 0)
+        print(nativeDateTime)
+        localDateTime.append(nativeDateTime)
         # All of the rest of the data
         avgWindDir.append(td.find_next().find_next().find_next().text)
         avgWindSpd.append(td.find_next().find_next().find_next().find_next().text)
         windObs.append(td.find_next().find_next().find_next().find_next().find_next().text)
         avgSeas.append(td.find_next().find_next().find_next().find_next().find_next().find_next().text)
         waveObs.append(td.find_next().find_next().find_next().find_next().find_next().find_next().find_next().text)
-print(datetime.datetime.now())
-print(UTC)
+
 
 
 # Connecting to Database
 conn = psycopg2.connect(host="localhost", database="DataScrapingDB", user="Emerson", password="postgres")
 curr = conn.cursor()
-curr.execute("delete from testerdb where id>=0")
+removal = "delete from testerdb"
 
 # Populating Databasea
 x = 0
-while x < len(date):
-    curr.execute("insert into testerdb (id,date,time,avgWindDir,avgWindSpd,windObs,avgSeas,waveObs) values (%s, %s,%s,%s,%s,%s,%s,%s)",
-                 (x,date[x],UTC[x],avgWindDir[x],avgWindSpd[x],windObs[x],avgSeas[x],waveObs[x]))
+while x < len(localDateTime):
+    curr.execute("insert into testerdb (datetime,avgWindDir,avgWindSpd,windObs,avgSeas,waveObs) values (%s,%s,%s,%s,%s,%s)",
+                 (localDateTime[x],avgWindDir[x],avgWindSpd[x],windObs[x],avgSeas[x],waveObs[x]))
     x = x + 1
 var = curr.execute("select * from testerdb")
 rows = curr.fetchall()
