@@ -15,8 +15,8 @@ waveObs = []
 
 
 # Request to Page
-page = requests.get('https://www.ndbc.noaa.gov/sar.php?station=44258')
-#page = requests.get('https://www.ndbc.noaa.gov/sar.php?station=44258&list=all')
+#page = requests.get('https://www.ndbc.noaa.gov/sar.php?station=44258')
+page = requests.get('https://www.ndbc.noaa.gov/sar.php?station=44258&list=all')
 soup = BeautifulSoup(page.text, 'lxml')
 
 # Grabbing Page Title

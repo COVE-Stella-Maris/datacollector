@@ -14,10 +14,12 @@ rows = curr.fetchall()
 x = 0
 while x < len(rows):
     data.append(int(rows[x][1]))
-    time.append(int(x))
+    time.append(int(x) * 6)
     x = x + 1
-testGraph = px.line(x=time, y=data, labels={'x':'Time','y':"Avg Wind D"})
+testGraph = px.line(x=time, y=data, labels={'x': 'Time in 6 Hour Increments From Now', 'y': "Avg Wind Direction"})
+testGraph2 = px.scatter(x=time, y=data, labels={'x': 'Time From Now (6 Hour Increments)', 'y': "Avg Wind D"})
 testGraph.show()
+#testGraph2.show()
 print(data)
 
 conn.commit()
