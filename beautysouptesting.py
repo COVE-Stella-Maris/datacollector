@@ -2,7 +2,6 @@ from bs4 import BeautifulSoup
 import requests
 import psycopg2
 import datetime
-from pytz import timezone
 
 
 title = []
