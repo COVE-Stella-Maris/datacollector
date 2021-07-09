@@ -1,7 +1,8 @@
 import pandas as pd
 import plotly.express as px
+import psycopg2
 
-dfb = pd.read_csv("testingdb.csv", header=None)
+conn = psycopg2.connect(host="localhost", database="DataScrapingDB", user="Emerson", password="postgres")
 
 df = dfb.apply(pd.to_numeric, errors='ignore')
 rdf = df.head(10)

@@ -35,7 +35,6 @@ for td in soup.find_all('tr'):
         # Local Time Conversion
         zTime = abs(int(zTime[0] + zTime[1]))
         nativeDateTime = datetime.datetime(int(date[6] + date[7] + date[8] + date[9]), int(date[0] + date[1]), int(date[3] + date[4]), zTime, 0, 0)
-        print(nativeDateTime)
         localDateTime.append(nativeDateTime)
         # All of the rest of the data
         avgWindDir.append(td.find_next().find_next().find_next().text)
@@ -57,9 +56,9 @@ while x < len(localDateTime):
     curr.execute("insert into testerdb (datetime,avgWindDir,avgWindSpd,windObs,avgSeas,waveObs) values (%s,%s,%s,%s,%s,%s)",
                  (localDateTime[x],avgWindDir[x],avgWindSpd[x],windObs[x],avgSeas[x],waveObs[x]))
     x = x + 1
-var = curr.execute("select * from testerdb")
-rows = curr.fetchall()
-print(rows)
+#var = curr.execute("select * from testerdb")
+#rows = curr.fetchall()
+#print(rows)
 conn.commit()
 conn.close()
 
