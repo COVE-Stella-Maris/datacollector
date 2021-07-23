@@ -5,6 +5,7 @@ import datetime
 
 
 title = []
+data = []
 
 
 # Request to Page
@@ -15,11 +16,11 @@ soup = BeautifulSoup(page.text, 'lxml')
 title.append(soup.title.string)
 
 # Grabbing Data from Table
-for td in soup.find_all('tr'):
-    if td.get('class') == "stationTextData":
-        date = td.find_next().text
+for div in soup.find_all('div'):
+    if div.get('class') == "stationTextData":
+        data.append(div.find_next().text)
 
-
+print(data)
 
 
 # Connecting to Database
