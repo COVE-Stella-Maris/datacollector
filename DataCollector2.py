@@ -16,25 +16,25 @@ soup = BeautifulSoup(page.text, 'lxml')
 title.append(soup.title.string)
 
 # Grabbing Data from Table
-for div in soup.find_all('div'):
-    if div.get('class') == "stationTextData":
-        data.append(div.find_next().text)
+for div in soup.find_all('div', attrs={"class": "stationTextData"}):
+    print(div.text.strip())
+    data.append(div.text.strip())
 
 print(data)
 
 
 # Connecting to Database
-#conn = psycopg2.connect(host="localhost", database="DataScrapingDB", user="Emerson", password="postgres")
-#curr = conn.cursor()
+conn = psycopg2.connect(host="localhost", database="DataScrapingDB", user="Emerson", password="postgres")
+curr = conn.cursor()
 
 # Populating Databasea
-#x = 0
-#while x < len(localDateTime):
-#    curr.execute("insert into testerdb (datetime,avgWindDir,avgWindSpd,windObs,avgSeas,waveObs) values (%s,%s,%s,%s,%s,%s)",
-#                 (localDateTime[x],avgWindDir[x],avgWindSpd[x],windObs[x],avgSeas[x],waveObs[x]))
-#    x = x + 1
-#var = curr.execute("select * from testerdb")
-#rows = curr.fetchall()
-#print(rows)
-#conn.commit()
-#conn.close()
+x = 0
+while x < len(data):
+    curr.execute("insert into datascraper2 (datetime, heightmetric) values (%s, %s)",
+                 (datetime[x], data[x]))
+    x = x + 1
+var = curr.execute("select * from testerdb")
+rows = curr.fetchall()
+print(rows)
+conn.commit()
+conn.close()
