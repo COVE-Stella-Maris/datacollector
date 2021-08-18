@@ -17,12 +17,14 @@ title.append(soup.title.string)
 
 # Grabbing Data from Table
 for div in soup.find_all('div', attrs={"class": "stationTextData"}):
-    print(div.text.strip())
-    data.append(div.text.strip())
+    stripper = div.text.replace('\r','')
+    stripper = stripper.replace('\n', '')
+    stripper = stripper.replace(' ', '')
+    data.append(stripper)
 
 print(data)
 
-
+"""
 # Connecting to Database
 conn = psycopg2.connect(host="localhost", database="DataScrapingDB", user="Emerson", password="postgres")
 curr = conn.cursor()
@@ -30,11 +32,11 @@ curr = conn.cursor()
 # Populating Databasea
 x = 0
 while x < len(data):
-    curr.execute("insert into datascraper2 (datetime, heightmetric) values (%s, %s)",
-                 (datetime[x], data[x]))
+    curr.execute("insert into datascraper2 (datetime, heightmetric) values (%s, %i)", (datetime[x], data[x]))
     x = x + 1
 var = curr.execute("select * from testerdb")
 rows = curr.fetchall()
 print(rows)
 conn.commit()
 conn.close()
+"""
