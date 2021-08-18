@@ -24,7 +24,7 @@ for div in soup.find_all('div', attrs={"class": "stationTextData"}):
 
 print(data)
 
-"""
+
 # Connecting to Database
 conn = psycopg2.connect(host="localhost", database="DataScrapingDB", user="Emerson", password="postgres")
 curr = conn.cursor()
@@ -39,4 +39,3 @@ rows = curr.fetchall()
 print(rows)
 conn.commit()
 conn.close()
-"""
